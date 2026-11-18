@@ -306,27 +306,45 @@ def analyze_media(
     verdict_track_id = aggregate.get("track_id") or primary_id
     chosen = by_id.get(verdict_track_id) or (analyses[0] if analyses else None)
 
-    if chosen is None:  # nothing detected at all - degrade loudly, never crash
-        raise RuntimeError("no face could be tracked in the input")
-
-    verdict = dict(chosen["verdict"])
-    streams = chosen["streams"]
-    verdict["scope"] = "document"
-    verdict["track_id"] = chosen["track"].track_id
-    verdict["face_agreement"] = {
-        "n_faces": len(tracks), "n_analysed": len(by_id),
-        "detail": aggregate.get("agreement"),
-    }
-    if len(by_id) > 1:
-        verdict["summary"] = (f"{aggregate['agreement']}; the clip verdict follows the "
-                             f"worst-scoring face (#{chosen['track'].track_id}). "
-                             + verdict["summary"])
+    # A "fallback" track is the centred window used when the cascade finds nothing.
+    # Scoring it and printing REAL is how a missed face turns into a false clearance,
+    # so it is treated exactly like "no face at all": abstain, with the reason attached.
+    fallback_only = chosen is not None and getattr(chosen["track"], "kind", "face") != "face"
+    no_face = chosen is None or fallback_only or scan["detection_rate"] == 0.0
+    if no_face:
+        # Nothing tracked. This used to raise (HTTP 500) and, before that, to look like a
+        # clean "REAL". Both are wrong: absence of a face is absence of evidence, so we
+        # abstain explicitly and tell the caller why.
+        verdict = _no_face_verdict(scan, len(tracks), fallback_only=fallback_only)
+        streams: Dict[str, Any] = {}
+        temporal_section: Dict[str, Any] = {}
+        faces_notes.append(
+            "No real face was tracked (detection rate "
+            f"{scan['detection_rate']:.0%}"
+            + ("; only the fallback window was available" if fallback_only else "")
+            + "). Front-facing Haar cascades miss profile views, heavy occlusion, low light and "
+            "small faces, so this clip is not evidence of authenticity."
+        )
+    else:
+        verdict = dict(chosen["verdict"])
+        streams = chosen["streams"]
+        temporal_section = chosen["temporal"]
+        verdict["scope"] = "document"
+        verdict["track_id"] = chosen["track"].track_id
+        verdict["face_agreement"] = {
+            "n_faces": len(tracks), "n_analysed": len(by_id),
+            "detail": aggregate.get("agreement"),
+        }
+        if len(by_id) > 1:
+            verdict["summary"] = (f"{aggregate['agreement']}; the clip verdict follows the "
+                                  f"worst-scoring face (#{chosen['track'].track_id}). "
+                                  + verdict["summary"])
 
     # ---- 3. explainability artefacts ------------------------------------
     t0 = time.perf_counter()
     artifacts: Dict[str, str] = {}
     heat = tl = spec = bars = faces_img = tracks_img = None
-    if render_artifacts:
+    if render_artifacts and not no_face:
         seam_series = chosen["seam_series"]
         rep_idx = (int(np.argmin(np.abs(np.array(seam_series) - np.median(seam_series))))
                    if seam_series else 0)
@@ -460,7 +478,7 @@ def analyze_media(
         },
         "verdict": verdict,
         "streams": streams,
-        "temporal": chosen["temporal"],
+        "temporal": temporal_section,
         "timings_ms": timings,
         "artifacts": artifacts,
         "disclaimer": (
@@ -473,8 +491,13 @@ def analyze_media(
 
     (outdir / "result.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
     result["artifacts"]["json"] = f"/runs/{run_id}/result.json"
+    if no_face:
+        result.setdefault("warnings", []).append(
+            "No face was tracked, so no evidence images or PDF were rendered - "
+            "an empty heatmap would look like a clean result."
+        )
 
-    if make_pdf and render_artifacts:
+    if make_pdf and render_artifacts and not no_face:
         try:
             pdf_path = outdir / "report.pdf"
             build_pdf(result, pdf_path,
@@ -485,6 +508,47 @@ def analyze_media(
             result["warnings"] = [str(exc)]
         (outdir / "result.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
     return result
+
+
+
+def _no_face_verdict(scan: Dict[str, Any], n_tracks: int,
+                     fallback_only: bool = False) -> Dict[str, Any]:
+    """Explicit abstention for inputs where no face could be scored.
+
+    A clip with no detectable face says nothing about manipulation. Returning REAL here is
+    the most dangerous possible false negative, so the honest answer is INCONCLUSIVE with
+    the detection diagnostics attached.
+    """
+    cal_raw = config.load_calibration().raw
+    return {
+        "verdict": "INCONCLUSIVE",
+        "p_fake": 0.5,
+        "p_real": 0.5,
+        "confidence": 0.0,
+        "logit": 0.0,
+        "thresholds": cal_raw.get("thresholds", {}),
+        "stream_contributions": {},
+        "effective_weights": {},
+        "leading_stream": None,
+        "stream_spread": 0.0,
+        "mixed_evidence": False,
+        "calibration_version": cal_raw.get("version"),
+        "summary": (
+            "No real face was tracked, so no stream produced usable evidence. This is an "
+            "abstention, not a verdict: the clip is neither cleared nor accused. A missed "
+            "face is the most dangerous failure mode, so DeepTrace refuses to call it REAL."
+        ),
+        "abstention_note": (
+            f"face detection rate {scan['detection_rate']:.0%} across the sampled frames"
+            + (" (fallback window only)" if fallback_only else "")
+            + "; frontal Haar cascades fail on profile views, occlusion, low light and small faces"
+        ),
+        "scope": "document",
+        "track_id": None,
+        "face_agreement": {"n_faces": n_tracks, "n_analysed": 0,
+                           "detail": "no scored face"},
+        "no_face": True,
+    }
 
 
 def _source_box_at(track_id: int, crops_by_track: Dict[int, Dict[int, FaceCrop]],

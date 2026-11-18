@@ -15,13 +15,19 @@ Run locally:  uvicorn deeptrace.api:app --host 0.0.0.0 --port 8000
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import tempfile
 import uuid
 from pathlib import Path
 from typing import Any, Dict
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+import threading
+import time
+from collections import defaultdict, deque
+from typing import Deque
+
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -55,6 +61,42 @@ def index() -> FileResponse:
     return FileResponse(config.WEB_DIR / "index.html")
 
 
+
+# ---------------------------------------------------------------------------
+# abuse guard: one clip costs 30-70 s of CPU, so an unauthenticated endpoint is a
+# free denial-of-service button. Cheap in-process limiter; put a real one in front
+# (Cloudflare / Render WAF) if this ever faces real traffic.
+# ---------------------------------------------------------------------------
+RATE_LIMIT = int(os.environ.get("DEEPTRACE_RATE_LIMIT", 8))          # requests
+RATE_WINDOW = float(os.environ.get("DEEPTRACE_RATE_WINDOW", 300))    # per N seconds
+_hits: "dict[str, Deque[float]]" = defaultdict(deque)
+_hits_lock = threading.Lock()
+
+
+def _client_ip(request: Request) -> str:
+    forwarded = request.headers.get("x-forwarded-for", "")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
+def _check_rate(request: Request) -> None:
+    ip = _client_ip(request)
+    now = time.time()
+    with _hits_lock:
+        q = _hits[ip]
+        while q and now - q[0] > RATE_WINDOW:
+            q.popleft()
+        if len(q) >= RATE_LIMIT:
+            retry = max(1, int(RATE_WINDOW - (now - q[0])))
+            raise HTTPException(
+                status_code=429,
+                detail=(f"rate limit: {RATE_LIMIT} analyses per "
+                        f"{int(RATE_WINDOW // 60)} minutes per IP. Retry in {retry}s."),
+                headers={"Retry-After": str(retry)},
+            )
+        q.append(now)
+
 @app.get("/api/health")
 def health() -> Dict[str, Any]:
     cal = config.load_calibration()
@@ -82,11 +124,13 @@ def calibration() -> JSONResponse:
 
 @app.post("/api/analyze")
 async def analyze(
+    request: Request,
     file: UploadFile = File(...),
     max_frames: int = Form(config.MAX_FRAMES),
     max_faces: int = Form(config.MAX_FACES),
     make_pdf: bool = Form(True),
 ) -> JSONResponse:
+    _check_rate(request)
     suffix = Path(file.filename or "upload.mp4").suffix.lower()
     allowed = {".mp4", ".mov", ".avi", ".mkv", ".webm", ".m4v", ".jpg", ".jpeg", ".png", ".bmp", ".webp"}
     if suffix not in allowed:
@@ -100,7 +144,7 @@ async def analyze(
             while chunk := await file.read(1024 * 1024):
                 size += len(chunk)
                 if size > config.MAX_UPLOAD_BYTES:
-                    raise HTTPException(status_code=413, detail="file exceeds 200 MB limit")
+                    raise HTTPException(status_code=413, detail=f"file exceeds {config.MAX_UPLOAD_BYTES // (1024*1024)} MB limit")
                 fh.write(chunk)
         settings = config.Settings(max_frames=max(4, min(int(max_frames), 96)),
                                    max_faces=max(1, min(int(max_faces), 8)))

@@ -214,7 +214,7 @@ def build_pdf(result: Dict[str, Any], out_path: Path, images: Dict[str, Path] | 
     flow.append(_table([
         ["Frames used", str(tstats.get("frames_used", "-")),
          "Temporal support", f"{tstats.get('temporal_support', 0):.2f}"],
-        ["Pulse estimate", f"{result['streams']['temporal']['features'].get('pulse_bpm', 0):.0f} bpm "
+        ["Pulse estimate", f"{result.get('streams', {}).get('temporal', {}).get('features', {}).get('pulse_bpm', 0):.0f} bpm "
                            f"(strength {result['streams']['temporal']['features'].get('pulse_strength', 0):.2f})",
          "Identity jitter", f"{result['streams']['temporal']['features'].get('identity_jitter', 0):.3f}"],
     ], [32 * mm, 58 * mm, 32 * mm, 35 * mm], header=False))

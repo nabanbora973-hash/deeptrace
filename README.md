@@ -401,3 +401,20 @@ deeptrace/
 Code: MIT. The `demo/assets` portraits are AI-generated faces, not real people. The demo
 composites exist to validate detection, not to demonstrate how to deceive. Use this software
 for verification, research and education.
+
+
+## Hosted deployment notes (v1.2.1)
+
+- **Rate limit:** `POST /api/analyze` allows `DEEPTRACE_RATE_LIMIT` requests (default 8) per
+  `DEEPTRACE_RATE_WINDOW` seconds (default 300) per IP. One clip costs 30-70 s of CPU on a free
+  instance, so an unauthenticated endpoint is otherwise a denial-of-service button.
+- **Upload cap:** `DEEPTRACE_MAX_UPLOAD_MB` (default 60).
+- **Ephemeral runs:** free tiers keep `DEEPTRACE_WORK_DIR` on local disk. A restart wipes
+  `/data/runs`; download the JSON if you need the record.
+- **No face = abstention:** when no real face is tracked (or only the fallback window was
+  available), the verdict is `INCONCLUSIVE` with `no_face: true` - never `REAL`. A missed face is
+  missing evidence, and clearing a clip on it would be the worst possible false negative.
+- **Pin OpenCV:** `opencv-python-headless>=4.8,<5`. OpenCV 5 removed `cv2.CascadeClassifier`,
+  which the face locator uses; without the pin every analysis returns HTTP 500.
+- **Speed:** lower `DEEPTRACE_MAX_FRAMES` (default 48) to 16 for interactive use on a free
+  instance; accuracy on short clips barely moves.

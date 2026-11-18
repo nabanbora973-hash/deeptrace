@@ -59,7 +59,7 @@
     <div class="upload-card" id="analyze">
       <div class="upload-head">
         <h2>Run an analysis</h2>
-        <span class="hint">video or image · max 200 MB</span>
+        <span class="hint">video or image · max 60 MB · 8 analyses per 5 min per IP</span>
       </div>
 
       <div class="dropzone" id="dropzone" tabindex="0" role="button"
@@ -128,7 +128,7 @@
           <div class="gauge-center">
             <span class="verdict-label" id="verdictLabel">—</span>
             <span class="verdict-p" id="verdictP">p(fake) —</span>
-            <span class="verdict-conf" id="verdictConf">confidence —</span>
+            <span class="verdict-conf" id="verdictConf" title="how much evidence supports this call; the multi-face rule deliberately keeps it low when only one face is manipulated">evidence strength —</span>
           </div>
         </div>
         <div class="verdict-side">

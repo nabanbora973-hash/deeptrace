@@ -31,7 +31,7 @@ WORK_DIR = Path(os.environ.get("DEEPTRACE_WORK_DIR", DATA_DIR / "runs"))
 CALIBRATION_PATH = Path(os.environ.get("DEEPTRACE_CALIBRATION", DATA_DIR / "calibration.json"))
 
 APP_NAME = "DeepTrace"
-APP_VERSION = "1.2.0"
+APP_VERSION = "1.2.1"
 APP_TAGLINE = ("Multi-signal face-swap forensics - three streams of evidence per face, "
                "one explainable verdict per clip.")
 
@@ -46,7 +46,7 @@ CROP_SIZE = 256            # aligned face crop resolution used by all streams
 MAX_FACES = int(os.environ.get("DEEPTRACE_MAX_FACES", 3))          # faces analysed per clip
 MIN_TRACK_FRAMES = int(os.environ.get("DEEPTRACE_MIN_TRACK_FRAMES", 4))  # hits needed to score a face
 TRACK_MAX_GAP = int(os.environ.get("DEEPTRACE_TRACK_MAX_GAP", 3))  # frames a face may vanish and return
-MAX_UPLOAD_BYTES = int(float(os.environ.get("DEEPTRACE_MAX_UPLOAD_MB", 200)) * 1024 * 1024)
+MAX_UPLOAD_BYTES = int(float(os.environ.get("DEEPTRACE_MAX_UPLOAD_MB", 60)) * 1024 * 1024)
 
 # Verdict thresholds on the calibrated fake-probability.
 FAKE_THRESHOLD = 0.65

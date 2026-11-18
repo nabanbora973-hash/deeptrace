@@ -195,7 +195,11 @@
     $("#verdictLabel").style.color =
       v.verdict === "FAKE" ? "var(--red)" : v.verdict === "REAL" ? "var(--green)" : "var(--amber)";
     $("#verdictP").textContent = `p(fake) ${v.p_fake.toFixed(3)}`;
-    $("#verdictConf").textContent = `confidence ${v.confidence.toFixed(2)}`;
+    // "confidence" reads as "how sure the model is", which is backwards for the
+    // worst-case rule: one swapped face makes the clip suspect even when the other
+    // faces are clean, so the number stays low on purpose. Name it for what it is.
+    $("#verdictConf").textContent =
+      `evidence strength ${v.confidence.toFixed(2)} · multi-face rule: ${v.face_agreement?.detail || "single face"}`;
 
     const arc = $("#gaugeArc");
     const circumference = 2 * Math.PI * 82;
