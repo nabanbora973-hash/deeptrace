@@ -1,0 +1,1045 @@
+{
+  "run_id": "example-multiface",
+  "engine": {
+    "name": "DeepTrace",
+    "version": "1.1.0"
+  },
+  "input": {
+    "filename": "two_faces_swap.mp4",
+    "kind": "video",
+    "duration_s": 4.0,
+    "fps": 25.0,
+    "resolution": "1920x640",
+    "frames_sampled": 48,
+    "frames_total": 100
+  },
+  "faces": {
+    "detected_frames": 48,
+    "detection_rate": 1.0,
+    "method": "haar-frontal",
+    "crop_size": 256,
+    "count": 2,
+    "max_simultaneous": 2,
+    "multi_face_frames": 48,
+    "analysed": 2,
+    "primary_track": 1,
+    "verdict_track": 1,
+    "tracking": {
+      "association": "greedy centre-distance + size-ratio + appearance",
+      "max_gap": 3,
+      "matched_pairs": 94,
+      "identities_created": 2,
+      "frames_sampled": 48,
+      "min_track_frames": 4,
+      "max_faces": 3
+    },
+    "aggregate": {
+      "strategy": "worst-case face",
+      "verdict": "FAKE",
+      "p_fake": 0.6752,
+      "track_id": 1,
+      "n_faces": 2,
+      "n_analysed": 2,
+      "p_fake_min": 0.0056,
+      "p_fake_max": 0.6752,
+      "disagreement": 0.6696,
+      "agreement": "1 of 2 faces flagged",
+      "abstention_note": "review band 0.50-0.56: decides 90% of the calibration set; 8% error among decided clips; 95% upper bound 19%",
+      "per_face": [
+        {
+          "track_id": 1,
+          "verdict": "FAKE",
+          "p_fake": 0.6752
+        },
+        {
+          "track_id": 2,
+          "verdict": "REAL",
+          "p_fake": 0.0056
+        }
+      ]
+    },
+    "notes": [],
+    "tracks": [
+      {
+        "track_id": 1,
+        "kind": "face",
+        "frames": 48,
+        "first_position": 0,
+        "last_position": 47,
+        "span": 48,
+        "gaps": 0,
+        "continuity": 1.0,
+        "box": [
+          1303,
+          114,
+          302,
+          302
+        ],
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ],
+        "role": "primary",
+        "verdict_source": true,
+        "analysed": true,
+        "verdict": {
+          "verdict": "FAKE",
+          "p_fake": 0.6752,
+          "p_real": 0.3248,
+          "confidence": 0.278,
+          "logit": 0.7316,
+          "thresholds": {
+            "fake": 0.5559,
+            "real": 0.4959
+          },
+          "stream_contributions": {
+            "spatial": 1.736,
+            "frequency": 1.6372,
+            "temporal": -0.0028
+          },
+          "effective_weights": {
+            "spatial": 3.1302,
+            "frequency": 2.0302,
+            "temporal": 0.383
+          },
+          "leading_stream": "spatial",
+          "stream_spread": 0.4068,
+          "mixed_evidence": false,
+          "calibration_version": "fitted-2026-11-17-18r24f",
+          "summary": "Face-swap indicators dominate: the fused fake-probability is 0.68. Leading stream: Spatial domain. Spatial domain: noise_uniformity (synthetic, +1.65); Frequency domain: periodic spectral peaks (gan fingerprint) (synthetic, +2.07); Temporal domain: frame-to-frame flicker in the face region (authentic, -0.27).",
+          "abstention_note": "review band 0.50-0.56: decides 90% of the calibration set; 8% error among decided clips; 95% upper bound 19%"
+        },
+        "streams": {
+          "spatial": {
+            "stream": "spatial",
+            "title": "Spatial domain",
+            "score": 0.7773,
+            "logit": 1.25,
+            "reliability": 1.0,
+            "features": {
+              "sharpness_mismatch": 0.21501,
+              "seam_contrast": 0.44195,
+              "noise_uniformity": 0.63961,
+              "colour_mismatch": 0.13332,
+              "noise_inconsistency": 0.10697
+            },
+            "z_scores": {
+              "sharpness_mismatch": -0.716,
+              "noise_inconsistency": 0.05,
+              "colour_mismatch": 0.557,
+              "seam_contrast": 0.88,
+              "noise_uniformity": -1.458
+            },
+            "feature_contributions": {
+              "sharpness_mismatch": 0.6921,
+              "noise_inconsistency": 0.0338,
+              "colour_mismatch": -0.7911,
+              "seam_contrast": -0.82,
+              "noise_uniformity": 1.6464
+            },
+            "evidence": [
+              {
+                "feature": "noise_uniformity",
+                "label": "noise_uniformity",
+                "logit_contribution": 1.6464,
+                "direction": "synthetic",
+                "strength": 1.0
+              },
+              {
+                "feature": "seam_contrast",
+                "label": "Blending seam at the face boundary",
+                "logit_contribution": -0.82,
+                "direction": "authentic",
+                "strength": 0.547
+              },
+              {
+                "feature": "colour_mismatch",
+                "label": "Colour/chroma mismatch between swapped face and background",
+                "logit_contribution": -0.7911,
+                "direction": "authentic",
+                "strength": 0.527
+              },
+              {
+                "feature": "sharpness_mismatch",
+                "label": "Sharpness discontinuity between face and surroundings",
+                "logit_contribution": 0.6921,
+                "direction": "synthetic",
+                "strength": 0.461
+              },
+              {
+                "feature": "noise_inconsistency",
+                "label": "Sensor-noise profile breaks across the face region",
+                "logit_contribution": 0.0338,
+                "direction": "synthetic",
+                "strength": 0.023
+              }
+            ]
+          },
+          "frequency": {
+            "stream": "frequency",
+            "title": "Frequency domain",
+            "score": 0.9032,
+            "logit": 2.233,
+            "reliability": 1.0,
+            "features": {
+              "hf_ratio": 0.01494,
+              "dct_blockiness": 0.20511,
+              "peak_prominence": 0.95785,
+              "angular_peakiness": 8.0,
+              "spectral_slope": -3.17626
+            },
+            "z_scores": {
+              "dct_blockiness": 0.639,
+              "angular_peakiness": 0.53,
+              "peak_prominence": 2.083,
+              "hf_ratio": 1.208,
+              "spectral_slope": 1.12
+            },
+            "feature_contributions": {
+              "dct_blockiness": -0.6862,
+              "angular_peakiness": -0.5069,
+              "peak_prominence": 2.0654,
+              "hf_ratio": 1.0304,
+              "spectral_slope": -0.2236
+            },
+            "evidence": [
+              {
+                "feature": "peak_prominence",
+                "label": "Periodic spectral peaks (GAN fingerprint)",
+                "logit_contribution": 2.0654,
+                "direction": "synthetic",
+                "strength": 1.0
+              },
+              {
+                "feature": "hf_ratio",
+                "label": "Excess high-frequency energy (generator upsampling)",
+                "logit_contribution": 1.0304,
+                "direction": "synthetic",
+                "strength": 0.687
+              },
+              {
+                "feature": "dct_blockiness",
+                "label": "DCT block high-frequency anomalies",
+                "logit_contribution": -0.6862,
+                "direction": "authentic",
+                "strength": 0.457
+              },
+              {
+                "feature": "angular_peakiness",
+                "label": "Checkerboard-style angular spectral artefacts",
+                "logit_contribution": -0.5069,
+                "direction": "authentic",
+                "strength": 0.338
+              },
+              {
+                "feature": "spectral_slope",
+                "label": "Atypical spectral fall-off",
+                "logit_contribution": -0.2236,
+                "direction": "authentic",
+                "strength": 0.149
+              }
+            ]
+          },
+          "temporal": {
+            "stream": "temporal",
+            "title": "Temporal domain",
+            "score": 0.4964,
+            "logit": -0.0146,
+            "reliability": 0.714,
+            "features": {
+              "flicker": 0.15511,
+              "identity_jitter": 0.01398,
+              "pulse_strength": 0.84221,
+              "pulse_bpm": 180.0
+            },
+            "z_scores": {
+              "flicker": -0.536,
+              "identity_jitter": -0.208,
+              "pulse_strength": 0.842,
+              "pulse_bpm": 4.0
+            },
+            "feature_contributions": {
+              "flicker": -0.2736,
+              "identity_jitter": -0.1642,
+              "pulse_strength": 0.0,
+              "pulse_bpm": 0.0
+            },
+            "evidence": [
+              {
+                "feature": "flicker",
+                "label": "Frame-to-frame flicker in the face region",
+                "logit_contribution": -0.2736,
+                "direction": "authentic",
+                "strength": 0.182
+              },
+              {
+                "feature": "identity_jitter",
+                "label": "Identity jitter / unstable face geometry",
+                "logit_contribution": -0.1642,
+                "direction": "authentic",
+                "strength": 0.109
+              },
+              {
+                "feature": "pulse_strength",
+                "label": "No recoverable blood-pulse (rPPG) from facial skin",
+                "logit_contribution": 0.0,
+                "direction": "authentic",
+                "strength": 0.0
+              },
+              {
+                "feature": "pulse_bpm",
+                "label": "Estimated pulse rate",
+                "logit_contribution": 0.0,
+                "direction": "authentic",
+                "strength": 0.0
+              }
+            ]
+          }
+        },
+        "temporal": {
+          "frames_used": 48,
+          "mean_descriptor_similarity": 0.9939114958681958,
+          "pulse_snr": 109.1022641300996,
+          "temporal_support": 0.7137905790170563,
+          "seam_series": [
+            0.53092,
+            0.34873,
+            0.57063,
+            0.52772,
+            0.43756,
+            0.47864,
+            0.38269,
+            0.45281,
+            0.46247,
+            0.44434,
+            0.49766,
+            0.54148,
+            0.44086,
+            0.42801,
+            0.42178,
+            0.49011,
+            0.38131,
+            0.42779,
+            0.39616,
+            0.41497,
+            0.38961,
+            0.39243,
+            0.48619,
+            0.45332,
+            0.3286,
+            0.37436,
+            0.387,
+            0.40518,
+            0.50381,
+            0.49091,
+            0.44304,
+            0.45729,
+            0.46695,
+            0.36272,
+            0.42959,
+            0.51609,
+            0.39626,
+            0.38657,
+            0.51764,
+            0.479,
+            0.32572,
+            0.39227,
+            0.39346,
+            0.44358,
+            0.41063,
+            0.45119,
+            0.5105,
+            0.54802
+          ]
+        },
+        "detection_rate": 1.0,
+        "sampling_fps": 11.87,
+        "frames_total": 48
+      },
+      {
+        "track_id": 2,
+        "kind": "face",
+        "frames": 48,
+        "first_position": 0,
+        "last_position": 47,
+        "span": 48,
+        "gaps": 0,
+        "continuity": 1.0,
+        "box": [
+          375,
+          124,
+          237,
+          237
+        ],
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ],
+        "role": "secondary",
+        "verdict_source": false,
+        "analysed": true,
+        "verdict": {
+          "verdict": "REAL",
+          "p_fake": 0.0056,
+          "p_real": 0.9944,
+          "confidence": 0.7698,
+          "logit": -5.177,
+          "thresholds": {
+            "fake": 0.5559,
+            "real": 0.4959
+          },
+          "stream_contributions": {
+            "spatial": -2.4334,
+            "frequency": -0.145,
+            "temporal": 0.0402
+          },
+          "effective_weights": {
+            "spatial": 3.1302,
+            "frequency": 2.0302,
+            "temporal": 0.383
+          },
+          "leading_stream": "temporal",
+          "stream_spread": 0.4412,
+          "mixed_evidence": false,
+          "calibration_version": "fitted-2026-11-17-18r24f",
+          "summary": "No consistent swap signature: the fused fake-probability is 0.01. Leading stream: Temporal domain. Spatial domain: blending seam at the face boundary (authentic, -1.84); Frequency domain: checkerboard-style angular spectral artefacts (authentic, -0.51); Temporal domain: identity jitter / unstable face geometry (authentic, -0.18).",
+          "abstention_note": "review band 0.50-0.56: decides 90% of the calibration set; 8% error among decided clips; 95% upper bound 19%"
+        },
+        "streams": {
+          "spatial": {
+            "stream": "spatial",
+            "title": "Spatial domain",
+            "score": 0.1113,
+            "logit": -2.0771,
+            "reliability": 1.0,
+            "features": {
+              "sharpness_mismatch": 0.77657,
+              "seam_contrast": 0.61266,
+              "noise_uniformity": 1.07762,
+              "colour_mismatch": 0.09639,
+              "noise_inconsistency": 0.17839
+            },
+            "z_scores": {
+              "sharpness_mismatch": 1.339,
+              "noise_inconsistency": 0.969,
+              "colour_mismatch": -0.459,
+              "seam_contrast": 1.978,
+              "noise_uniformity": 0.65
+            },
+            "feature_contributions": {
+              "sharpness_mismatch": -1.2941,
+              "noise_inconsistency": 0.6521,
+              "colour_mismatch": 0.6515,
+              "seam_contrast": -1.8417,
+              "noise_uniformity": -0.7336
+            },
+            "evidence": [
+              {
+                "feature": "seam_contrast",
+                "label": "Blending seam at the face boundary",
+                "logit_contribution": -1.8417,
+                "direction": "authentic",
+                "strength": 1.0
+              },
+              {
+                "feature": "sharpness_mismatch",
+                "label": "Sharpness discontinuity between face and surroundings",
+                "logit_contribution": -1.2941,
+                "direction": "authentic",
+                "strength": 0.863
+              },
+              {
+                "feature": "noise_uniformity",
+                "label": "noise_uniformity",
+                "logit_contribution": -0.7336,
+                "direction": "authentic",
+                "strength": 0.489
+              },
+              {
+                "feature": "noise_inconsistency",
+                "label": "Sensor-noise profile breaks across the face region",
+                "logit_contribution": 0.6521,
+                "direction": "synthetic",
+                "strength": 0.435
+              },
+              {
+                "feature": "colour_mismatch",
+                "label": "Colour/chroma mismatch between swapped face and background",
+                "logit_contribution": 0.6515,
+                "direction": "synthetic",
+                "strength": 0.434
+              }
+            ]
+          },
+          "frequency": {
+            "stream": "frequency",
+            "title": "Frequency domain",
+            "score": 0.4643,
+            "logit": -0.1429,
+            "reliability": 1.0,
+            "features": {
+              "hf_ratio": 0.00963,
+              "dct_blockiness": 0.17942,
+              "peak_prominence": 0.65725,
+              "angular_peakiness": 8.0,
+              "spectral_slope": -3.37297
+            },
+            "z_scores": {
+              "dct_blockiness": -0.427,
+              "angular_peakiness": 0.53,
+              "peak_prominence": -0.32,
+              "hf_ratio": -0.385,
+              "spectral_slope": 0.019
+            },
+            "feature_contributions": {
+              "dct_blockiness": 0.4592,
+              "angular_peakiness": -0.5069,
+              "peak_prominence": -0.3172,
+              "hf_ratio": -0.3282,
+              "spectral_slope": -0.0037
+            },
+            "evidence": [
+              {
+                "feature": "angular_peakiness",
+                "label": "Checkerboard-style angular spectral artefacts",
+                "logit_contribution": -0.5069,
+                "direction": "authentic",
+                "strength": 0.338
+              },
+              {
+                "feature": "dct_blockiness",
+                "label": "DCT block high-frequency anomalies",
+                "logit_contribution": 0.4592,
+                "direction": "synthetic",
+                "strength": 0.306
+              },
+              {
+                "feature": "hf_ratio",
+                "label": "Excess high-frequency energy (generator upsampling)",
+                "logit_contribution": -0.3282,
+                "direction": "authentic",
+                "strength": 0.219
+              },
+              {
+                "feature": "peak_prominence",
+                "label": "Periodic spectral peaks (GAN fingerprint)",
+                "logit_contribution": -0.3172,
+                "direction": "authentic",
+                "strength": 0.211
+              },
+              {
+                "feature": "spectral_slope",
+                "label": "Atypical spectral fall-off",
+                "logit_contribution": -0.0037,
+                "direction": "authentic",
+                "strength": 0.002
+              }
+            ]
+          },
+          "temporal": {
+            "stream": "temporal",
+            "title": "Temporal domain",
+            "score": 0.5525,
+            "logit": 0.2106,
+            "reliability": 0.714,
+            "features": {
+              "flicker": 0.23768,
+              "identity_jitter": 0.01023,
+              "pulse_strength": 0.16624,
+              "pulse_bpm": 90.0
+            },
+            "z_scores": {
+              "flicker": -0.061,
+              "identity_jitter": -0.23,
+              "pulse_strength": 0.166,
+              "pulse_bpm": 4.0
+            },
+            "feature_contributions": {
+              "flicker": -0.0311,
+              "identity_jitter": -0.1816,
+              "pulse_strength": 0.0,
+              "pulse_bpm": 0.0
+            },
+            "evidence": [
+              {
+                "feature": "identity_jitter",
+                "label": "Identity jitter / unstable face geometry",
+                "logit_contribution": -0.1816,
+                "direction": "authentic",
+                "strength": 0.121
+              },
+              {
+                "feature": "flicker",
+                "label": "Frame-to-frame flicker in the face region",
+                "logit_contribution": -0.0311,
+                "direction": "authentic",
+                "strength": 0.021
+              },
+              {
+                "feature": "pulse_strength",
+                "label": "No recoverable blood-pulse (rPPG) from facial skin",
+                "logit_contribution": 0.0,
+                "direction": "authentic",
+                "strength": 0.0
+              },
+              {
+                "feature": "pulse_bpm",
+                "label": "Estimated pulse rate",
+                "logit_contribution": 0.0,
+                "direction": "authentic",
+                "strength": 0.0
+              }
+            ]
+          }
+        },
+        "temporal": {
+          "frames_used": 48,
+          "mean_descriptor_similarity": 0.9960930677170449,
+          "pulse_snr": 7.005256729308137,
+          "temporal_support": 0.7137905790170563,
+          "seam_series": [
+            0.19454,
+            0.19478,
+            0.49826,
+            0.49192,
+            0.53234,
+            0.54813,
+            0.50518,
+            0.56079,
+            0.60061,
+            0.57313,
+            0.61497,
+            0.47749,
+            0.43577,
+            0.40496,
+            0.57066,
+            0.53492,
+            0.5746,
+            0.51089,
+            0.40231,
+            0.55788,
+            0.47331,
+            0.68992,
+            0.65467,
+            0.62127,
+            0.56773,
+            0.588,
+            0.49068,
+            0.61034,
+            0.62525,
+            0.66885,
+            0.74217,
+            0.77295,
+            0.78122,
+            0.77815,
+            0.73476,
+            0.73618,
+            0.74636,
+            0.73431,
+            0.72285,
+            0.67663,
+            0.71373,
+            0.64524,
+            0.76859,
+            0.69282,
+            0.76515,
+            0.69268,
+            0.74367,
+            0.64178
+          ]
+        },
+        "detection_rate": 1.0,
+        "sampling_fps": 11.87,
+        "frames_total": 48
+      }
+    ]
+  },
+  "verdict": {
+    "verdict": "FAKE",
+    "p_fake": 0.6752,
+    "p_real": 0.3248,
+    "confidence": 0.278,
+    "logit": 0.7316,
+    "thresholds": {
+      "fake": 0.5559,
+      "real": 0.4959
+    },
+    "stream_contributions": {
+      "spatial": 1.736,
+      "frequency": 1.6372,
+      "temporal": -0.0028
+    },
+    "effective_weights": {
+      "spatial": 3.1302,
+      "frequency": 2.0302,
+      "temporal": 0.383
+    },
+    "leading_stream": "spatial",
+    "stream_spread": 0.4068,
+    "mixed_evidence": false,
+    "calibration_version": "fitted-2026-11-17-18r24f",
+    "summary": "1 of 2 faces flagged; the clip verdict follows the worst-scoring face (#1). Face-swap indicators dominate: the fused fake-probability is 0.68. Leading stream: Spatial domain. Spatial domain: noise_uniformity (synthetic, +1.65); Frequency domain: periodic spectral peaks (gan fingerprint) (synthetic, +2.07); Temporal domain: frame-to-frame flicker in the face region (authentic, -0.27).",
+    "abstention_note": "review band 0.50-0.56: decides 90% of the calibration set; 8% error among decided clips; 95% upper bound 19%",
+    "scope": "document",
+    "track_id": 1,
+    "face_agreement": {
+      "n_faces": 2,
+      "n_analysed": 2,
+      "detail": "1 of 2 faces flagged"
+    }
+  },
+  "streams": {
+    "spatial": {
+      "stream": "spatial",
+      "title": "Spatial domain",
+      "score": 0.7773,
+      "logit": 1.25,
+      "reliability": 1.0,
+      "features": {
+        "sharpness_mismatch": 0.21501,
+        "seam_contrast": 0.44195,
+        "noise_uniformity": 0.63961,
+        "colour_mismatch": 0.13332,
+        "noise_inconsistency": 0.10697
+      },
+      "z_scores": {
+        "sharpness_mismatch": -0.716,
+        "noise_inconsistency": 0.05,
+        "colour_mismatch": 0.557,
+        "seam_contrast": 0.88,
+        "noise_uniformity": -1.458
+      },
+      "feature_contributions": {
+        "sharpness_mismatch": 0.6921,
+        "noise_inconsistency": 0.0338,
+        "colour_mismatch": -0.7911,
+        "seam_contrast": -0.82,
+        "noise_uniformity": 1.6464
+      },
+      "evidence": [
+        {
+          "feature": "noise_uniformity",
+          "label": "noise_uniformity",
+          "logit_contribution": 1.6464,
+          "direction": "synthetic",
+          "strength": 1.0
+        },
+        {
+          "feature": "seam_contrast",
+          "label": "Blending seam at the face boundary",
+          "logit_contribution": -0.82,
+          "direction": "authentic",
+          "strength": 0.547
+        },
+        {
+          "feature": "colour_mismatch",
+          "label": "Colour/chroma mismatch between swapped face and background",
+          "logit_contribution": -0.7911,
+          "direction": "authentic",
+          "strength": 0.527
+        },
+        {
+          "feature": "sharpness_mismatch",
+          "label": "Sharpness discontinuity between face and surroundings",
+          "logit_contribution": 0.6921,
+          "direction": "synthetic",
+          "strength": 0.461
+        },
+        {
+          "feature": "noise_inconsistency",
+          "label": "Sensor-noise profile breaks across the face region",
+          "logit_contribution": 0.0338,
+          "direction": "synthetic",
+          "strength": 0.023
+        }
+      ]
+    },
+    "frequency": {
+      "stream": "frequency",
+      "title": "Frequency domain",
+      "score": 0.9032,
+      "logit": 2.233,
+      "reliability": 1.0,
+      "features": {
+        "hf_ratio": 0.01494,
+        "dct_blockiness": 0.20511,
+        "peak_prominence": 0.95785,
+        "angular_peakiness": 8.0,
+        "spectral_slope": -3.17626
+      },
+      "z_scores": {
+        "dct_blockiness": 0.639,
+        "angular_peakiness": 0.53,
+        "peak_prominence": 2.083,
+        "hf_ratio": 1.208,
+        "spectral_slope": 1.12
+      },
+      "feature_contributions": {
+        "dct_blockiness": -0.6862,
+        "angular_peakiness": -0.5069,
+        "peak_prominence": 2.0654,
+        "hf_ratio": 1.0304,
+        "spectral_slope": -0.2236
+      },
+      "evidence": [
+        {
+          "feature": "peak_prominence",
+          "label": "Periodic spectral peaks (GAN fingerprint)",
+          "logit_contribution": 2.0654,
+          "direction": "synthetic",
+          "strength": 1.0
+        },
+        {
+          "feature": "hf_ratio",
+          "label": "Excess high-frequency energy (generator upsampling)",
+          "logit_contribution": 1.0304,
+          "direction": "synthetic",
+          "strength": 0.687
+        },
+        {
+          "feature": "dct_blockiness",
+          "label": "DCT block high-frequency anomalies",
+          "logit_contribution": -0.6862,
+          "direction": "authentic",
+          "strength": 0.457
+        },
+        {
+          "feature": "angular_peakiness",
+          "label": "Checkerboard-style angular spectral artefacts",
+          "logit_contribution": -0.5069,
+          "direction": "authentic",
+          "strength": 0.338
+        },
+        {
+          "feature": "spectral_slope",
+          "label": "Atypical spectral fall-off",
+          "logit_contribution": -0.2236,
+          "direction": "authentic",
+          "strength": 0.149
+        }
+      ]
+    },
+    "temporal": {
+      "stream": "temporal",
+      "title": "Temporal domain",
+      "score": 0.4964,
+      "logit": -0.0146,
+      "reliability": 0.714,
+      "features": {
+        "flicker": 0.15511,
+        "identity_jitter": 0.01398,
+        "pulse_strength": 0.84221,
+        "pulse_bpm": 180.0
+      },
+      "z_scores": {
+        "flicker": -0.536,
+        "identity_jitter": -0.208,
+        "pulse_strength": 0.842,
+        "pulse_bpm": 4.0
+      },
+      "feature_contributions": {
+        "flicker": -0.2736,
+        "identity_jitter": -0.1642,
+        "pulse_strength": 0.0,
+        "pulse_bpm": 0.0
+      },
+      "evidence": [
+        {
+          "feature": "flicker",
+          "label": "Frame-to-frame flicker in the face region",
+          "logit_contribution": -0.2736,
+          "direction": "authentic",
+          "strength": 0.182
+        },
+        {
+          "feature": "identity_jitter",
+          "label": "Identity jitter / unstable face geometry",
+          "logit_contribution": -0.1642,
+          "direction": "authentic",
+          "strength": 0.109
+        },
+        {
+          "feature": "pulse_strength",
+          "label": "No recoverable blood-pulse (rPPG) from facial skin",
+          "logit_contribution": 0.0,
+          "direction": "authentic",
+          "strength": 0.0
+        },
+        {
+          "feature": "pulse_bpm",
+          "label": "Estimated pulse rate",
+          "logit_contribution": 0.0,
+          "direction": "authentic",
+          "strength": 0.0
+        }
+      ]
+    }
+  },
+  "temporal": {
+    "frames_used": 48,
+    "mean_descriptor_similarity": 0.9939114958681958,
+    "pulse_snr": 109.1022641300996,
+    "temporal_support": 0.7137905790170563,
+    "seam_series": [
+      0.53092,
+      0.34873,
+      0.57063,
+      0.52772,
+      0.43756,
+      0.47864,
+      0.38269,
+      0.45281,
+      0.46247,
+      0.44434,
+      0.49766,
+      0.54148,
+      0.44086,
+      0.42801,
+      0.42178,
+      0.49011,
+      0.38131,
+      0.42779,
+      0.39616,
+      0.41497,
+      0.38961,
+      0.39243,
+      0.48619,
+      0.45332,
+      0.3286,
+      0.37436,
+      0.387,
+      0.40518,
+      0.50381,
+      0.49091,
+      0.44304,
+      0.45729,
+      0.46695,
+      0.36272,
+      0.42959,
+      0.51609,
+      0.39626,
+      0.38657,
+      0.51764,
+      0.479,
+      0.32572,
+      0.39227,
+      0.39346,
+      0.44358,
+      0.41063,
+      0.45119,
+      0.5105,
+      0.54802
+    ]
+  },
+  "timings_ms": {
+    "ingest_ms": 1238.9,
+    "face_ms": 2755.5,
+    "explain_ms": 169.3,
+    "total_ms": 6940.5
+  },
+  "artifacts": {
+    "face_1": "/runs/example-multiface/face_1.png",
+    "face_2": "/runs/example-multiface/face_2.png",
+    "overlay": "/runs/example-multiface/overlay.png",
+    "timeline": "/runs/example-multiface/timeline.png",
+    "spectrum": "/runs/example-multiface/spectrum.png",
+    "streams": "/runs/example-multiface/streams.png",
+    "faces": "/runs/example-multiface/faces.png",
+    "tracks": "/runs/example-multiface/tracks.png",
+    "json": "/runs/example-multiface/result.json",
+    "pdf": "/runs/example-multiface/report.pdf"
+  },
+  "disclaimer": "DeepTrace reports forensic evidence, not proof. Treat the verdict as one input alongside provenance metadata, source history and human review."
+}

@@ -1,0 +1,31 @@
+{
+  "evaluation_set": "cross-corpus: features_hard.csv",
+  "n": 22,
+  "calibration": "fitted-2026-11-17-18r24f",
+  "fused": {
+    "auc": 0.9896,
+    "auc_ci95": "[0.950, 1.000]",
+    "eer": 0.0312,
+    "threshold": 0.0407,
+    "f1": 0.9677,
+    "balanced_acc": 0.9688
+  },
+  "thresholds": {
+    "fake": 0.5559,
+    "real": 0.4959,
+    "operating_point": 0.5259,
+    "review_band": 0.03
+  },
+  "breakdown": {
+    "confusion": {
+      "tp": 10,
+      "tn": 6,
+      "fp": 0,
+      "fn": 6,
+      "inconclusive": 0
+    },
+    "decided_coverage": 1.0,
+    "accuracy_on_decided": 0.727
+  },
+  "subgroups": {}
+}
